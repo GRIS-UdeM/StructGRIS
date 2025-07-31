@@ -6,8 +6,7 @@ AlgoGRIS
   <img width="450" alt="SAT logo" src="https://github.com/user-attachments/assets/4cd12fd2-1bab-4139-95a2-73bbfadde332">
 </p>
 
-This repository contains all the audio algorithms related
-to spatialization in the GRIS workflow.
+This repository contains all the custom structures used by the GRIS tools.
 
 AlgoGRIS is currently developed at the
 [Groupe de Recherche en Immersion Spatiale (GRIS)](https://gris.musique.umontreal.ca/)
