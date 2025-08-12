@@ -33,7 +33,7 @@
 #include <memory>
 #include <utility>
 #include "Quaternion.hpp"
-#include "ValueTreeUtilities.hpp"
+#include "../Utilities/ValueTreeUtilities.hpp"
 
 namespace gris
 {

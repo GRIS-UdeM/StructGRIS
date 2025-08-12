@@ -66,6 +66,8 @@ add_library(StructGRIS STATIC
 
     Utilities/ValueTreeUtilities.cpp
     Utilities/ValueTreeUtilities.hpp
+
+    tl/optional.hpp
 )
 
 target_include_directories(StructGRIS PUBLIC
