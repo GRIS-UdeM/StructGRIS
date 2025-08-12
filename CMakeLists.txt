@@ -5,6 +5,19 @@ project(StructGRIS
     LANGUAGES CXX
 )
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_INCLUDE_CURRENT_DIR 1)
+
+# 1. Look for a system JUCE if any
+if(NOT TARGET juce::juce_core)
+  find_package(JUCE QUIET)
+endif()
+
+# 2. If not found, use bundled JUCE
+if(NOT TARGET juce::juce_core)
+  add_subdirectory(submodules/JUCE)
+endif()
+
 add_library(StructGRIS STATIC
     Containers/sg_AtomicUpdater.hpp
     Containers/sg_LogBuffer.cpp
@@ -56,7 +69,42 @@ add_library(StructGRIS STATIC
 )
 
 target_include_directories(StructGRIS PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Source>
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR} # for generated JuceHeader.h
 )
 
-target_compile_features(StructGRIS PUBLIC cxx_std_20)
+target_link_libraries(StructGRIS
+  PUBLIC
+    juce::juce_core
+    juce::juce_events
+    juce::juce_audio_basics
+    juce::juce_graphics
+    juce::juce_dsp
+    juce::juce_gui_basics
+)
+
+# Generate JuceHeader.h inside StructGRIS
+file(GENERATE
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/JuceHeader.h
+    CONTENT
+[=[
+#pragma once
+
+#include <juce_core/juce_core.h>
+#include <juce_events/juce_events.h>
+#include <juce_audio_basics/juce_audio_basics.h>
+#include <juce_graphics/juce_graphics.h>
+#include <juce_dsp/juce_dsp.h>
+#include <juce_gui_basics/juce_gui_basics.h>
+
+#if ! JUCE_DONT_DECLARE_PROJECTINFO
+namespace ProjectInfo
+{
+    const char* const  projectName    = "StructGRIS";
+    const char* const  companyName    = "Gris / SAT";
+    const char* const  versionString  = "1.0.0";
+    const int          versionNumber  = 0x100000;
+}
+#endif
+]=]
+)
