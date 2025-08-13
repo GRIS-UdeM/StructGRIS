@@ -19,9 +19,7 @@
 
 #pragma once
 
-// #include <JuceHeader.h>
-#include "Builds/submodules/StructGRIS/JuceHeader.h"
-
+ #include <JuceHeader.h>
 #include "Data/StrongTypes/sg_OutputPatch.hpp"
 #include "sg_OwnedMap.hpp"
 #include "sg_StaticVector.hpp"
