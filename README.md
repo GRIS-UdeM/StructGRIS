@@ -1,4 +1,4 @@
-AlgoGRIS
+StructGRIS
 ========
 
 <p align="left">
@@ -8,6 +8,6 @@ AlgoGRIS
 
 This repository contains all the custom structures used by the GRIS tools.
 
-AlgoGRIS is currently developed at the
+StructGRIS is currently developed at the
 [Groupe de Recherche en Immersion Spatiale (GRIS)](https://gris.musique.umontreal.ca/)
 and the [Société des Arts Technologiques (SAT)](https://sat.qc.ca/en/).
