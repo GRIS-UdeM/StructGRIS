@@ -39,6 +39,16 @@ public:
     //==============================================================================
     [[nodiscard]] constexpr degrees_t centered() const noexcept;
     [[nodiscard]] constexpr degrees_t madePositive() const noexcept;
+    [[nodiscard]] constexpr type getAsDegrees () const noexcept { return mValue; }
+    [[nodiscard]] constexpr type getAsRadians () const noexcept { return mValue / DEGREE_PER_RADIAN; }
+
+    [[nodiscard]] static degrees_t angleOf (juce::Point<type> const& point) noexcept
+    {
+        if (point.getX () == 0.0f && point.getY () == 0.0f) {
+            return degrees_t {};
+        }
+        return degrees_t { std::atan2 (point.getY (), point.getX ()) * DEGREE_PER_RADIAN };
+    }
 };
 
 } // namespace gris
@@ -64,5 +74,7 @@ constexpr degrees_t::degrees_t(radians_t const & radians) : StrongFloat(radians.
 {
     return degrees_t{ mValue < 0 ? mValue + static_cast<type>(360) : mValue };
 }
+
+using Degrees = degrees_t;
 
 } // namespace gris

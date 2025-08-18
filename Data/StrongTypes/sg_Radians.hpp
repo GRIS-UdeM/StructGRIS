@@ -39,7 +39,25 @@ public:
     explicit constexpr radians_t(degrees_t const & degrees);
     //==============================================================================
     [[nodiscard]] constexpr radians_t balanced() const noexcept;
+    [[nodiscard]] constexpr radians_t centered() const noexcept
+    {
+        return centeredAroundZero(juce::MathConstants<type>::twoPi);
+    }
     [[nodiscard]] constexpr radians_t madePositive() const noexcept;
+    //==============================================================================
+    [[nodiscard]] constexpr degrees_t toDegrees() const noexcept;
+    //==============================================================================
+    [[nodiscard]] constexpr operator degrees_t() const noexcept;
+    [[nodiscard]] constexpr type getAsDegrees() const noexcept;
+    [[nodiscard]] constexpr type getAsRadians() const noexcept { return mValue; }
+    //==============================================================================
+    [[nodiscard]] static radians_t angleOf(juce::Point<type> const & point) noexcept
+    {
+        if (point.getX() == 0.0f && point.getY() == 0.0f) {
+            return radians_t {};
+        }
+        return radians_t { std::atan2(point.getY(), point.getX()) };
+    }
 };
 
 } // namespace gris
@@ -72,9 +90,22 @@ constexpr radians_t::radians_t(type const & value) : StrongFloat(value)
 }
 
 //==============================================================================
+[[nodiscard]] constexpr degrees_t radians_t::toDegrees () const noexcept
+{
+    return degrees_t { mValue * degrees_t::DEGREE_PER_RADIAN };
+}
+
+//==============================================================================
+[[nodiscard]] constexpr radians_t::operator degrees_t() const noexcept { return toDegrees (); }
+
+[[nodiscard]] constexpr float radians_t::getAsDegrees () const noexcept { return mValue * degrees_t::DEGREE_PER_RADIAN; }
+
+//==============================================================================
 constexpr radians_t QUARTER_PI{ juce::MathConstants<radians_t::type>::halfPi / 2.0f };
 constexpr radians_t HALF_PI{ juce::MathConstants<radians_t::type>::halfPi };
 constexpr radians_t PI{ juce::MathConstants<radians_t::type>::pi };
 constexpr radians_t TWO_PI{ juce::MathConstants<radians_t::type>::twoPi };
+
+using Radians = radians_t;
 
 } // namespace gris

@@ -34,5 +34,7 @@ namespace gris
  *  }
  */
 using source_index_t = StrongIndex<int, struct SourceIndexT, 1>;
+using SourceId = StrongIndex<int, struct SourceIdT, 1>;
+using SourceIndex = StrongIndex<int, struct SourceIndexT, 0>;
 
 } // namespace gris

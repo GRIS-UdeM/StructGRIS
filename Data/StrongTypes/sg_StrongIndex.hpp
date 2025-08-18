@@ -52,6 +52,10 @@ public:
     [[nodiscard]] constexpr bool operator>(StrongIndex const & other) const { return mValue > other.mValue; }
     [[nodiscard]] constexpr bool operator<=(StrongIndex const & other) const { return mValue <= other.mValue; }
     [[nodiscard]] constexpr bool operator>=(StrongIndex const & other) const { return mValue >= other.mValue; }
+    [[nodiscard]] constexpr StrongIndex operator+(StrongIndex const & other) const noexcept
+    {
+        return StrongIndex{ mValue + other.mValue };
+    }
     //==============================================================================
     [[nodiscard]] constexpr type const & get() const { return mValue; }
     [[nodiscard]] const juce::String toString() const { return juce::String(mValue); }

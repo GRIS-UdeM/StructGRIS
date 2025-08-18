@@ -18,7 +18,7 @@
 */
 
 #pragma once
-// #include <JuceHeader.h>
+ #include <JuceHeader.h>
 #include "../sg_Macros.hpp"
 #include "../sg_constants.hpp"
 #include "juce_core/juce_core.h"
