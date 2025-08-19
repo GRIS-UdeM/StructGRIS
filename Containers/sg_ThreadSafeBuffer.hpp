@@ -1,7 +1,7 @@
 /*
  This file is part of SpatGRIS.
 
- Developers: Gaël Lane Lépine, Samuel Béland, Olivier Bélanger, Nicolas Masson
+ Developers: Samuel Béland, Olivier Bélanger, Nicolas Masson
 
  SpatGRIS is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -19,50 +19,57 @@
 
 #pragma once
 
-#include "sg_StrongFloat.hpp"
-#include "juce_core/juce_core.h"
+#include <JuceHeader.h>
 
 namespace gris
 {
-class radians_t;
-
 //==============================================================================
-/** Strongly-typed degrees. */
-class degrees_t final : public StrongFloat<float, degrees_t, struct DegreesT>
+/** A simple thread-safe buffer based on juce abstractions */
+template<typename T>
+class ThreadSafeBuffer
 {
+    juce::Array<T> mData;
+    juce::CriticalSection mMutex;
+
 public:
-    static constexpr type DEGREE_PER_RADIAN{ static_cast<type>(360) / juce::MathConstants<type>::twoPi };
     //==============================================================================
-    degrees_t() = default;
-    explicit constexpr degrees_t(type const & value) : StrongFloat(value) {}
-    explicit constexpr degrees_t(radians_t const & radians);
-    //==============================================================================
-    [[nodiscard]] constexpr degrees_t centered() const noexcept;
-    [[nodiscard]] constexpr degrees_t madePositive() const noexcept;
+    template<typename U>
+    void add(U && value) noexcept;
+    void add(T const & value) noexcept;
+    [[nodiscard]] juce::Array<T> steal() noexcept;
+    [[nodiscard]] bool empty() const noexcept;
 };
 
-} // namespace gris
-
 //==============================================================================
-#include "sg_Radians.hpp"
-
-namespace gris
+template<typename T>
+template<typename U>
+void ThreadSafeBuffer<T>::add(U && value) noexcept
 {
-//==============================================================================
-constexpr degrees_t::degrees_t(radians_t const & radians) : StrongFloat(radians.get() * DEGREE_PER_RADIAN)
-{
+    juce::ScopedLock const lock{ mMutex };
+    mData.add(std::forward<U>(value));
 }
 
 //==============================================================================
-[[nodiscard]] constexpr degrees_t degrees_t::centered() const noexcept
+template<typename T>
+void ThreadSafeBuffer<T>::add(T const & value) noexcept
 {
-    return centeredAroundZero(static_cast<type>(360));
+    juce::ScopedLock const lock{ mMutex };
+    mData.add(value);
 }
 
 //==============================================================================
-[[nodiscard]] constexpr degrees_t degrees_t::madePositive() const noexcept
+template<typename T>
+juce::Array<T> ThreadSafeBuffer<T>::steal() noexcept
 {
-    return degrees_t{ mValue < 0 ? mValue + static_cast<type>(360) : mValue };
+    juce::ScopedLock const lock{ mMutex };
+    return std::move(mData);
 }
 
+//==============================================================================
+template<typename T>
+bool ThreadSafeBuffer<T>::empty() const noexcept
+{
+    juce::ScopedLock const lock{ mMutex };
+    return mData.isEmpty();
+}
 } // namespace gris

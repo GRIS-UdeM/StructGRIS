@@ -58,6 +58,7 @@ public:
     [[nodiscard]] constexpr bool operator>=(Derived const & other) const { return mValue >= other.mValue; }
     //==============================================================================
     [[nodiscard]] constexpr type const & get() const { return mValue; }
+    [[nodiscard]] juce::String toString (int const precision = 2) const { return juce::String { mValue, precision }; }
     //==============================================================================
     [[nodiscard]] constexpr Derived operator-() const { return Derived{ -mValue }; }
     [[nodiscard]] constexpr Derived operator+(Derived const & other) const { return Derived{ mValue + other.mValue }; }
@@ -67,10 +68,16 @@ public:
     [[nodiscard]] constexpr type operator/(Derived const & other) const { return mValue / other.mValue; }
     //==============================================================================
     Derived & operator+=(Derived const & other) noexcept;
+    Derived& operator-=(Derived const& other) noexcept;
     Derived & operator*=(type const & mod) noexcept;
     Derived & operator/=(type const & mod) noexcept;
     //==============================================================================
     [[nodiscard]] constexpr Derived abs() const noexcept;
+    [[nodiscard]] constexpr Derived clamped(Derived const & min, Derived const & max) const noexcept
+    {
+        auto const & self{ *static_cast<Derived const *>(this) };
+        return (self < min ? min : (self > max ? max : self));
+    }
 
 protected:
     //==============================================================================
@@ -122,6 +129,14 @@ Derived & StrongFloat<T, Derived, Dummy>::operator+=(Derived const & other) noex
 
 //==============================================================================
 template<typename T, typename Derived, typename Dummy>
+Derived& StrongFloat<T, Derived, Dummy>::operator-=(Derived const& other) noexcept
+{
+    mValue -= other.mValue;
+    return *static_cast<Derived*>(this);
+}
+
+//==============================================================================
+template<typename T, typename Derived, typename Dummy>
 Derived & StrongFloat<T, Derived, Dummy>::operator*=(type const & mod) noexcept
 {
     mValue *= mod;
@@ -136,5 +151,13 @@ Derived & StrongFloat<T, Derived, Dummy>::operator/=(type const & mod) noexcept
     mValue /= mod;
     return *static_cast<Derived *>(this);
 }
+
+//==============================================================================
+class Normalized final : public StrongFloat<float, Normalized, struct NormalizedT>
+{
+public:
+    Normalized () = default;
+    explicit constexpr Normalized (type const& value) : StrongFloat (value) {}
+};
 
 } // namespace gris
