@@ -22,25 +22,25 @@
 #include "StrongTypes/sg_CartesianVector.hpp"
 #include "StrongTypes/sg_Dbfs.hpp"
 #include "StrongTypes/sg_Hz.hpp"
+#include "StrongTypes/sg_OutputPatch.hpp"
 #include "StrongTypes/sg_Radians.hpp"
 #include "StrongTypes/sg_SourceIndex.hpp"
-#include "Containers/sg_AtomicUpdater.hpp"
-#include "Containers/sg_StrongArray.hpp"
-#include "Data/StrongTypes/sg_OutputPatch.hpp"
-#include "Data/sg_LogicStrucs.hpp"
-#include "Data/sg_SpatMode.hpp"
-#include "Data/sg_constants.hpp"
 #include "sg_AudioStructs.hpp"
+#include "sg_LogicStrucs.hpp"
 #include "sg_Position.hpp"
+#include "sg_SpatMode.hpp"
 #include "sg_Triplet.hpp"
+#include "sg_constants.hpp"
 #include "juce_core/juce_core.h"
 #include "juce_graphics/juce_graphics.h"
 #include "tl/optional.hpp"
 #include <atomic>
 #include <cstdint>
 #include <memory>
+#include "../Containers/sg_AtomicUpdater.hpp"
 #include "../Containers/sg_OwnedMap.hpp"
 #include "../Containers/sg_StaticMap.hpp"
+#include "../Containers/sg_StrongArray.hpp"
 
 // this is the main switch to enable/disable fork_union
 #define SG_USE_FORK_UNION 0
