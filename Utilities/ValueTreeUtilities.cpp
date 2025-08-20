@@ -23,7 +23,7 @@ namespace gris
 juce::File getValidCurrentDirectory()
 {
     auto dir = juce::File::getCurrentWorkingDirectory();
-    if (dir.getFileName() == "build" || dir.getFileName() == "Builds")
+    if (dir.getFileName() == "build" || dir.getFileName() == "Builds" || dir.getFileName() == "cmake-build-debug")
         dir = dir.getParentDirectory();
 
     if (dir.getFileName() == "Debug" || dir.getFileName() == "Release" || dir.getFileName() == "RelWithDebInfo")
