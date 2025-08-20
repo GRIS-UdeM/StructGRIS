@@ -43,7 +43,7 @@
 #include "../Containers/sg_StrongArray.hpp"
 
 // this is the main switch to enable/disable fork_union
-#define SG_USE_FORK_UNION 0
+#define SG_USE_FORK_UNION 1
 
 // fork_union concurrency method options (used to set SG_FU_METHOD right below)
 // Use an array of atomics for concurrent float access: (vector<vector<AtomicWrapper<float>>>)
