@@ -28,9 +28,9 @@ class CircularDeque {
  public:
 
   CircularDeque()
-      : maxSize(S),
+      : headIndex{0},
         content{},
-        headIndex{0},
+        maxSize(S),
         currentSize{0}
   {}
 
@@ -59,7 +59,7 @@ class CircularDeque {
     content[headIndex] = elem;
     headIndex += 1;
     headIndex %= maxSize;
-    currentSize = (currentSize + 1) >= maxSize ? maxSize : currentSize + 1;
+    currentSize = (currentSize + 1) >= static_cast<int>(maxSize) ? static_cast<int>(maxSize) : currentSize + 1;
   }
 
   /**
