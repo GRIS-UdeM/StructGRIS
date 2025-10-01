@@ -846,12 +846,20 @@ tl::optional<ProjectData> ProjectData::fromXml(juce::XmlElement const & xml)
 }
 
 //==============================================================================
+
+  // TODO: we should just serialize as XML and compare the strings. This would make it
+  // less error prone to maintain. I don't think the performance difference matters.
 bool ProjectData::operator==(ProjectData const & other) const noexcept
 {
     return other.ordering == ordering && other.spatGainsInterpolation == spatGainsInterpolation
            && other.oscPort == oscPort && other.masterGain == masterGain
            && other.mbapDistanceAttenuationData == mbapDistanceAttenuationData && other.sources == sources
-           && other.spatMode == spatMode;
+           && other.spatMode == spatMode
+           && other.useMulticoreDSP == useMulticoreDSP
+           && other.standaloneSpeakerViewInputPort == standaloneSpeakerViewInputPort
+           && other.standaloneSpeakerViewOutputPort == standaloneSpeakerViewOutputPort
+           && other.standaloneSpeakerViewOutputAddress == standaloneSpeakerViewOutputAddress
+;
 }
 
 //==============================================================================
