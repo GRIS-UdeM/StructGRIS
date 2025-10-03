@@ -847,8 +847,9 @@ tl::optional<ProjectData> ProjectData::fromXml(juce::XmlElement const & xml)
 
 //==============================================================================
 
-  // TODO: we should just serialize as XML and compare the strings. This would make it
-  // less error prone to maintain. I don't think the performance difference matters.
+// TODO: we should just serialize as XML and compare the strings. This would make it
+// less error prone to maintain. I don't think the performance difference matters : This
+// is called infrequently and is called in methods that also do file IO which is already slow.
 bool ProjectData::operator==(ProjectData const & other) const noexcept
 {
     return other.ordering == ordering && other.spatGainsInterpolation == spatGainsInterpolation
