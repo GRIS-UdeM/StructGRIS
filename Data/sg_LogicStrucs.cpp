@@ -96,6 +96,9 @@ juce::String const ProjectData::XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_ADDRESS
   = "STANDALONE_SPEAKERVIEW_OUTPUT_ADDRESS";
 juce::String const ProjectData::XmlTags::USE_MULTICORE_DSP
   = "USE_MULTICORE_DSP";
+juce::String const ProjectData::XmlTags::MULTICORE_DSP_PRESET
+  = "MULTICORE_DSP_PRESET";
+
 
 juce::String const AppData::XmlTags::MAIN_TAG = "SPAT_GRIS_APP_DATA";
 juce::String const AppData::XmlTags::LAST_SPEAKER_SETUP = "LAST_SPEAKER_SETUP";
@@ -760,6 +763,7 @@ std::unique_ptr<juce::XmlElement> ProjectData::toXml() const
     result->setAttribute(XmlTags::VERSION, SPAT_GRIS_VERSION.toString());
     result->setAttribute(XmlTags::SPAT_MODE, spatModeToString(spatMode));
     result->setAttribute(XmlTags::USE_MULTICORE_DSP, useMulticoreDSP);
+    result->setAttribute(XmlTags::MULTICORE_DSP_PRESET, multicoreDSPPreset);
 
     return result;
 }
@@ -824,6 +828,9 @@ tl::optional<ProjectData> ProjectData::fromXml(juce::XmlElement const & xml)
     if (xml.hasAttribute(XmlTags::USE_MULTICORE_DSP)) {
         result.useMulticoreDSP = xml.getBoolAttribute(XmlTags::USE_MULTICORE_DSP);
     }
+    if (xml.hasAttribute(XmlTags::MULTICORE_DSP_PRESET)) {
+        result.multicoreDSPPreset = xml.getIntAttribute(XmlTags::MULTICORE_DSP_PRESET);
+    }
 
     for (auto const * sourceElement : sourcesElement->getChildIterator()) {
         jassert(sourceElement);
@@ -857,6 +864,7 @@ bool ProjectData::operator==(ProjectData const & other) const noexcept
            && other.mbapDistanceAttenuationData == mbapDistanceAttenuationData && other.sources == sources
            && other.spatMode == spatMode
            && other.useMulticoreDSP == useMulticoreDSP
+           && other.multicoreDSPPreset == multicoreDSPPreset
            && other.standaloneSpeakerViewInputPort == standaloneSpeakerViewInputPort
            && other.standaloneSpeakerViewOutputPort == standaloneSpeakerViewOutputPort
            && other.standaloneSpeakerViewOutputAddress == standaloneSpeakerViewOutputAddress
