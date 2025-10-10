@@ -70,6 +70,9 @@ struct SpatGrisVersion {
 
 extern const SpatGrisVersion SPAT_GRIS_VERSION;
 
+constexpr int OPTIMIZE_CPU_MULTICORE_PRESET = 0;
+constexpr int OPTIMIZE_LATENCY_MULTICORE_PRESET = 1;
+
 constexpr auto MAX_NUM_SOURCES = 256;
 constexpr auto MAX_NUM_SPEAKERS = 256;
 
