@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <cmath>
 #include <JuceHeader.h>
 #include "sg_StrongFloat.hpp"
 #include "juce_core/juce_core.h"
@@ -53,7 +54,9 @@ public:
     //==============================================================================
     [[nodiscard]] static radians_t angleOf(juce::Point<type> const & point) noexcept
     {
-        if (point.getX() == 0.0f && point.getY() == 0.0f) {
+        // this used to be a simple point.getX/Y() == 0.0f but its technically unsafe
+        // for tricky values like -0.0f.
+        if (std::fpclassify(point.getX()) == FP_ZERO && std::fpclassify(point.getY()) == FP_ZERO) {
             return radians_t {};
         }
         return radians_t { std::atan2(point.getY(), point.getX()) };
