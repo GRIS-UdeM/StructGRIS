@@ -21,6 +21,9 @@
 
 #include <JuceHeader.h>
 #include <type_traits>
+#include <cmath>
+#include <limits>
+
 
 namespace gris
 {
@@ -59,7 +62,13 @@ template<typename To, typename From>
 
     // If you hit this assertion, it either means that you tried casting a value into a type that was too narrow for it
     // or that you loss precision when going to of from a floating point type.
-    jassert(sanity_check == value);
+    if constexpr (std::is_floating_point_v<From>) {
+        // if we are a floating point, avoid == to avoid warnings.
+        auto const difference = sanity_check - value;
+        jassert(std::fpclassify(difference) == FP_ZERO);
+    } else {
+        jassert(sanity_check == value);
+    }
 
     return result;
 }
