@@ -44,7 +44,7 @@ constexpr To narrow(From const & value) noexcept
  *
  * On Windows and Linux debug builds, it also verifies that the original value is preserved. */
 template<typename To, typename From>
-[[nodiscard]] const To narrow(From const & value)
+[[nodiscard]] constexpr To narrow(From const & value)
 {
     static_assert(std::is_scalar_v<From> && std::is_scalar_v<To>, "narrow() can only be used with scalar types.");
 
