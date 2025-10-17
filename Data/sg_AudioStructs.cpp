@@ -80,8 +80,8 @@ void MbapAttenuationConfig::process(float * data,
     jassert(std::isfinite(state.currentCoefficient));
     jassert(std::isfinite(state.currentGain));
 
-    if (coefficientStep == 0.0f && gainStep == 0.0f) {
-        if (attenuationRatio == 0.0f) {
+    if (std::fpclassify(coefficientStep) == FP_ZERO && std::fpclassify(gainStep) == FP_ZERO) {
+        if (std::fpclassify(attenuationRatio) == FP_ZERO) {
             return;
         }
 

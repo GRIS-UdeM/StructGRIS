@@ -209,7 +209,7 @@ std::vector<KeyType> OwnedMap<KeyType, ValueType, Capacity>::getKeys() const noe
 {
     JUCE_ASSERT_MESSAGE_THREAD;
     std::vector<KeyType> result{};
-    result.reserve(size());
+    result.reserve(static_cast<size_t>(size()));
     for (auto const & node : *this) {
         result.push_back(node.key);
     }
