@@ -54,8 +54,8 @@ struct CartesianVector {
     ~CartesianVector() = default;
     SG_DEFAULT_COPY_AND_MOVE(CartesianVector)
     //==============================================================================
-    [[nodiscard]] constexpr bool operator==(CartesianVector const & other) const noexcept;
-    [[nodiscard]] constexpr bool operator!=(CartesianVector const & other) const noexcept;
+    [[nodiscard]] inline bool operator==(CartesianVector const & other) const noexcept;
+    [[nodiscard]] inline bool operator!=(CartesianVector const & other) const noexcept;
     [[nodiscard]] constexpr CartesianVector operator+(CartesianVector const & other) const noexcept;
     [[nodiscard]] constexpr CartesianVector operator-(CartesianVector const & other) const noexcept;
     [[nodiscard]] constexpr CartesianVector operator/(float scalar) const noexcept;
@@ -112,13 +112,13 @@ constexpr CartesianVector::CartesianVector(float const newX, float const newY, f
 }
 
 //==============================================================================
-constexpr bool CartesianVector::operator==(CartesianVector const & other) const noexcept
+inline bool CartesianVector::operator==(CartesianVector const & other) const noexcept
 {
-    return x == other.x && y == other.y && z == other.z;
+  return juce::approximatelyEqual(x, other.x) && juce::approximatelyEqual(y, other.y) && juce::approximatelyEqual(z, other.z);
 }
 
 //==============================================================================
-constexpr bool CartesianVector::operator!=(CartesianVector const & other) const noexcept
+inline bool CartesianVector::operator!=(CartesianVector const & other) const noexcept
 {
     return !(*this == other);
 }
