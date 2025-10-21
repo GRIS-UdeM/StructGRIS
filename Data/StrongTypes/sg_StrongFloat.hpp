@@ -50,8 +50,8 @@ public:
     StrongFloat() = default;
     explicit constexpr StrongFloat(T const & value) : mValue(value) {}
     //==============================================================================
-  [[nodiscard]] constexpr bool operator==(Derived const & other) const { return juce::approximatelyEqual(mValue, other.mValue); }
-  [[nodiscard]] constexpr bool operator!=(Derived const & other) const { return !juce::approximatelyEqual(mValue, other.mValue); }
+    [[nodiscard]] constexpr bool operator==(Derived const & other) const { return mValue == other.mValue; }
+    [[nodiscard]] constexpr bool operator!=(Derived const & other) const { return mValue != other.mValue; }
     [[nodiscard]] constexpr bool operator<(Derived const & other) const { return mValue < other.mValue; }
     [[nodiscard]] constexpr bool operator>(Derived const & other) const { return mValue > other.mValue; }
     [[nodiscard]] constexpr bool operator<=(Derived const & other) const { return mValue <= other.mValue; }

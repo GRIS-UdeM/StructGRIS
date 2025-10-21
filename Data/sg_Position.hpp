@@ -51,7 +51,7 @@ public:
     [[nodiscard]] constexpr auto const & getPolar() const noexcept { return mPolar; }
     [[nodiscard]] constexpr auto const & getCartesian() const noexcept { return mCartesian; }
     //==============================================================================
-    [[nodiscard]] inline bool operator==(Position const & other) const noexcept;
+    [[nodiscard]] constexpr bool operator==(Position const & other) const noexcept;
     //==============================================================================
     Position & operator=(PolarVector const & polar) noexcept;
     Position & operator=(CartesianVector const & cartesian) noexcept;
@@ -94,7 +94,7 @@ private:
 };
 
 //==============================================================================
-inline bool Position::operator==(Position const & other) const noexcept
+constexpr bool Position::operator==(Position const & other) const noexcept
 {
     return mCartesian == other.mCartesian;
 }

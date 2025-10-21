@@ -49,13 +49,13 @@ PolarVector::PolarVector(CartesianVector const & cartesian) noexcept
     // This is quite dangerous because any trigonometry done outside of this class might get things wrong.
 
     length = std::sqrt(cartesian.x * cartesian.x + cartesian.y * cartesian.y + cartesian.z * cartesian.z);
-    if (std::fpclassify(length) == FP_ZERO) {
+    if (length == 0.0f) {
         return;
     }
 
     elevation = HALF_PI - radians_t{ std::acos(std::clamp(cartesian.z / length, -1.0f, 1.0f)) };
 
-    if (std::fpclassify(cartesian.x) == FP_ZERO && std::fpclassify(cartesian.y) == FP_ZERO) {
+    if (cartesian.x == 0.0f && cartesian.y == 0.0f) {
         return;
     }
 

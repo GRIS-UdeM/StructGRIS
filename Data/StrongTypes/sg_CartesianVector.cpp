@@ -44,7 +44,7 @@ CartesianVector::CartesianVector(PolarVector const & polarVector) noexcept
     // This is quite dangerous because any trigonometry done outside of this class might get things wrong.
 
     auto const diffElev = HALF_PI.get() - polarVector.elevation.get();
-    auto const inverseElevation{ std::fpclassify(diffElev) == FP_ZERO ? 0.0000001f : diffElev };
+    auto const inverseElevation{ diffElev == 0.0f ? 0.0000001f : diffElev };
 
     x = polarVector.length * std::sin(inverseElevation) * std::cos(polarVector.azimuth.get());
     y = polarVector.length * std::sin(inverseElevation) * std::sin(polarVector.azimuth.get());

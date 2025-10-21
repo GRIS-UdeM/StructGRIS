@@ -481,7 +481,7 @@ tl::optional<Position> SpeakerData::getAbsoluteSpeakerPosition(juce::ValueTree s
 
     tl::optional<Quaternion> parentQuat;
 
-    if (std::fpclassify(yaw) == FP_ZERO && std::fpclassify(pitch) == FP_ZERO && std::fpclassify(roll) == FP_ZERO) {
+    if (yaw == 0.0 && pitch == 0.0 && roll == 0.0) {
         parentQuat = tl::nullopt;
     } else {
         parentQuat = getQuaternionFromEulerAngles(yaw, pitch, roll);

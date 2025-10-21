@@ -44,7 +44,7 @@ public:
 
     [[nodiscard]] static degrees_t angleOf (juce::Point<type> const& point) noexcept
     {
-        if (std::fpclassify(point.getX()) == FP_ZERO && std::fpclassify(point.getY()) == FP_ZERO) {
+        if (point.getX () == 0.0f && point.getY () == 0.0f) {
             return degrees_t {};
         }
         return degrees_t { std::atan2 (point.getY (), point.getX ()) * DEGREE_PER_RADIAN };
