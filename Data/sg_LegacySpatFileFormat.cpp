@@ -159,9 +159,7 @@ tl::optional<ProjectData> readLegacyProjectFile(juce::XmlElement const & xml)
         return tl::nullopt;
     }
 
-    auto const oscPort{ xml.getIntAttribute("OSC_Input_Port", DEFAULT_OSC_INPUT_PORT) }; // TODO : validate value
-
-    // auto const numInputs{ xml.getStringAttribute("Number_Of_Inputs").getIntValue() }; /* UNUSED */
+    // "OSC_Input_Port" and "Number_Of_Inputs" are unused in project
 
     auto const masterGain{ LEGAL_MASTER_GAIN_RANGE.clipValue(
         dbfs_t{ static_cast<float>(xml.getDoubleAttribute("Master_Gain_Out", 0.0)) }) };
@@ -199,7 +197,6 @@ tl::optional<ProjectData> readLegacyProjectFile(juce::XmlElement const & xml)
         }
     }
 
-    result.oscPort = oscPort;
     result.masterGain = masterGain;
     result.spatGainsInterpolation = gainInterpolation;
 

@@ -64,6 +64,13 @@ juce::String const AudioSettings::XmlTags::OUTPUT_INTERFACE = "OUTPUT_INTERFACE"
 juce::String const AudioSettings::XmlTags::SAMPLE_RATE = "SAMPLE_RATE";
 juce::String const AudioSettings::XmlTags::BUFFER_SIZE = "BUFFER_SIZE";
 
+juce::String const NetworkSettings::XmlTags::MAIN_TAG = "NETWORK_SETTINGS";
+juce::String const NetworkSettings::XmlTags::OSC_INPUT_PORT = "OSC_INPUT_PORT";
+juce::String const NetworkSettings::XmlTags::STANDALONE_SPEAKERVIEW_INPUT_PORT = "STANDALONE_SPEAKERVIEW_INPUT_PORT";
+juce::String const NetworkSettings::XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_PORT = "STANDALONE_SPEAKERVIEW_OUTPUT_PORT";
+juce::String const NetworkSettings::XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_ADDRESS
+    = "STANDALONE_SPEAKERVIEW_OUTPUT_ADDRESS";
+
 juce::String const RecordingOptions::XmlTags::MAIN_TAG = "RECORDING_OPTIONS";
 juce::String const RecordingOptions::XmlTags::FORMAT = "FORMAT";
 juce::String const RecordingOptions::XmlTags::FILE_TYPE = "FILE_TYPE";
@@ -89,11 +96,6 @@ juce::String const ProjectData::XmlTags::SPAT_MODE = "SPAT_MODE";
 juce::String const ProjectData::XmlTags::SOURCES = "SOURCES";
 juce::String const ProjectData::XmlTags::MASTER_GAIN = "MASTER_GAIN";
 juce::String const ProjectData::XmlTags::GAIN_INTERPOLATION = "GAIN_INTERPOLATION";
-juce::String const ProjectData::XmlTags::OSC_PORT = "OSC_PORT";
-juce::String const ProjectData::XmlTags::STANDALONE_SPEAKERVIEW_INPUT_PORT = "STANDALONE_SPEAKERVIEW_INPUT_PORT";
-juce::String const ProjectData::XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_PORT = "STANDALONE_SPEAKERVIEW_OUTPUT_PORT";
-juce::String const ProjectData::XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_ADDRESS
-  = "STANDALONE_SPEAKERVIEW_OUTPUT_ADDRESS";
 juce::String const ProjectData::XmlTags::USE_MULTICORE_DSP
   = "USE_MULTICORE_DSP";
 
@@ -598,6 +600,55 @@ tl::optional<AudioSettings> AudioSettings::fromXml(juce::XmlElement const & xml)
 }
 
 //==============================================================================
+std::unique_ptr<juce::XmlElement> NetworkSettings::toXml() const
+{
+    auto result{ std::make_unique<juce::XmlElement>(XmlTags::MAIN_TAG) };
+
+    result->setAttribute(XmlTags::OSC_INPUT_PORT, oscPort);
+    if (standaloneSpeakerViewInputPort)
+        result->setAttribute(XmlTags::STANDALONE_SPEAKERVIEW_INPUT_PORT, *standaloneSpeakerViewInputPort);
+    if (standaloneSpeakerViewOutputPort)
+        result->setAttribute(XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_PORT, *standaloneSpeakerViewOutputPort);
+    if (standaloneSpeakerViewOutputAddress)
+        result->setAttribute(XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_ADDRESS, *standaloneSpeakerViewOutputAddress);
+
+    return result;
+}
+
+//==============================================================================
+tl::optional<NetworkSettings> NetworkSettings::fromXml(juce::XmlElement const & xml)
+{
+    juce::StringArray requiredAttributes{ XmlTags::OSC_INPUT_PORT };
+
+    if (xml.getTagName() != XmlTags::MAIN_TAG
+        || !std::all_of(requiredAttributes.begin(), requiredAttributes.end(), [&](juce::String const & string) {
+               return xml.hasAttribute(string);
+           })) {
+        return tl::nullopt;
+    }
+
+    tl::optional<NetworkSettings> result{ NetworkSettings{} };
+    auto oscPort{ xml.getIntAttribute(XmlTags::OSC_INPUT_PORT) };
+
+    if (oscPort < MIN_OSC_INPUT_PORT || oscPort > MAX_OSC_INPUT_PORT)
+        oscPort = DEFAULT_OSC_INPUT_PORT;
+
+    result->oscPort = oscPort;
+    if (xml.hasAttribute(XmlTags::STANDALONE_SPEAKERVIEW_INPUT_PORT)) {
+        result->standaloneSpeakerViewInputPort = xml.getIntAttribute(XmlTags::STANDALONE_SPEAKERVIEW_INPUT_PORT);
+    }
+    if (xml.hasAttribute(XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_PORT)) {
+        result->standaloneSpeakerViewOutputPort = xml.getIntAttribute(XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_PORT);
+    }
+    if (xml.hasAttribute(XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_ADDRESS)) {
+        result->standaloneSpeakerViewOutputAddress
+            = xml.getStringAttribute(XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_ADDRESS);
+    }
+
+    return result;
+}
+
+//==============================================================================
 juce::String recordingFormatToString(RecordingFormat const format)
 {
     return RECORDING_FORMAT_STRINGS[static_cast<int>(format)];
@@ -747,14 +798,6 @@ std::unique_ptr<juce::XmlElement> ProjectData::toXml() const
 
     result->addChildElement(sourcesElement.release());
     result->addChildElement(mbapDistanceAttenuationData.toXml().release());
-
-    result->setAttribute(XmlTags::OSC_PORT, oscPort);
-    if (standaloneSpeakerViewInputPort)
-        result->setAttribute(XmlTags::STANDALONE_SPEAKERVIEW_INPUT_PORT, *standaloneSpeakerViewInputPort);
-    if (standaloneSpeakerViewOutputPort)
-        result->setAttribute(XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_PORT, *standaloneSpeakerViewOutputPort);
-    if (standaloneSpeakerViewOutputAddress)
-        result->setAttribute(XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_ADDRESS, *standaloneSpeakerViewOutputAddress);
     result->setAttribute(XmlTags::MASTER_GAIN, masterGain.get());
     result->setAttribute(XmlTags::GAIN_INTERPOLATION, spatGainsInterpolation);
     result->setAttribute(XmlTags::VERSION, SPAT_GRIS_VERSION.toString());
@@ -767,7 +810,7 @@ std::unique_ptr<juce::XmlElement> ProjectData::toXml() const
 //==============================================================================
 tl::optional<ProjectData> ProjectData::fromXml(juce::XmlElement const & xml)
 {
-    juce::StringArray const requiredTags{ XmlTags::MASTER_GAIN, XmlTags::GAIN_INTERPOLATION, XmlTags::OSC_PORT };
+    juce::StringArray const requiredTags{ XmlTags::MASTER_GAIN, XmlTags::GAIN_INTERPOLATION };
     if (xml.getTagName() != XmlTags::MAIN_TAG
         || !std::all_of(requiredTags.begin(), requiredTags.end(), [&](juce::String const & string) {
                return xml.hasAttribute(string);
@@ -807,20 +850,9 @@ tl::optional<ProjectData> ProjectData::fromXml(juce::XmlElement const & xml)
         dbfs_t{ static_cast<dbfs_t::type>(xml.getDoubleAttribute(XmlTags::MASTER_GAIN)) });
     result.spatGainsInterpolation = LEGAL_GAIN_INTERPOLATION_RANGE.clipValue(
         static_cast<float>(xml.getDoubleAttribute(XmlTags::GAIN_INTERPOLATION)));
-    result.oscPort = xml.getIntAttribute(XmlTags::OSC_PORT); // TODO : validate value
     result.mbapDistanceAttenuationData = *mbapAttenuation;
     result.spatMode = *spatMode;
 
-    if (xml.hasAttribute(XmlTags::STANDALONE_SPEAKERVIEW_INPUT_PORT)) {
-        result.standaloneSpeakerViewInputPort = xml.getIntAttribute(XmlTags::STANDALONE_SPEAKERVIEW_INPUT_PORT);
-    }
-    if (xml.hasAttribute(XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_PORT)) {
-        result.standaloneSpeakerViewOutputPort = xml.getIntAttribute(XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_PORT);
-    }
-    if (xml.hasAttribute(XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_ADDRESS)) {
-        result.standaloneSpeakerViewOutputAddress
-            = xml.getStringAttribute(XmlTags::STANDALONE_SPEAKERVIEW_OUTPUT_ADDRESS);
-    }
     if (xml.hasAttribute(XmlTags::USE_MULTICORE_DSP)) {
         result.useMulticoreDSP = xml.getBoolAttribute(XmlTags::USE_MULTICORE_DSP);
     }
@@ -853,14 +885,10 @@ tl::optional<ProjectData> ProjectData::fromXml(juce::XmlElement const & xml)
 bool ProjectData::operator==(ProjectData const & other) const noexcept
 {
     return other.ordering == ordering && other.spatGainsInterpolation == spatGainsInterpolation
-           && other.oscPort == oscPort && other.masterGain == masterGain
+           && other.masterGain == masterGain
            && other.mbapDistanceAttenuationData == mbapDistanceAttenuationData && other.sources == sources
            && other.spatMode == spatMode
-           && other.useMulticoreDSP == useMulticoreDSP
-           && other.standaloneSpeakerViewInputPort == standaloneSpeakerViewInputPort
-           && other.standaloneSpeakerViewOutputPort == standaloneSpeakerViewOutputPort
-           && other.standaloneSpeakerViewOutputAddress == standaloneSpeakerViewOutputAddress
-;
+           && other.useMulticoreDSP == useMulticoreDSP;
 }
 
 //==============================================================================
@@ -872,6 +900,7 @@ std::unique_ptr<juce::XmlElement> AppData::toXml() const
     cameraElement->addChildElement(cameraPosition.toXml().release());
 
     result->addChildElement(audioSettings.toXml().release());
+    result->addChildElement(networkSettings.toXml().release());
     result->addChildElement(recordingOptions.toXml().release());
     result->addChildElement(cameraElement.release());
     result->addChildElement(viewSettings.toXml().release());
@@ -908,12 +937,13 @@ tl::optional<AppData> AppData::fromXml(juce::XmlElement const & xml)
     };
 
     auto const * audioSettingsElement{ xml.getChildByName(AudioSettings::XmlTags::MAIN_TAG) };
+    auto const * networkSettingsElement{ xml.getChildByName(NetworkSettings::XmlTags::MAIN_TAG) };
     auto const * recordingOptionsElement{ xml.getChildByName(RecordingOptions::XmlTags::MAIN_TAG) };
     auto const * cameraElement{ xml.getChildByName(XmlTags::CAMERA) };
     auto const * viewSettingsElement{ xml.getChildByName(ViewSettings::XmlTags::MAIN_TAG) };
     auto const * stereoRoutingElement{ xml.getChildByName(StereoRouting::XmlTags::MAIN_TAG) };
 
-    if (xml.getTagName() != XmlTags::MAIN_TAG || !audioSettingsElement || !recordingOptionsElement || !cameraElement
+    if (xml.getTagName() != XmlTags::MAIN_TAG || !audioSettingsElement || !networkSettingsElement || !recordingOptionsElement || !cameraElement
         || !viewSettingsElement || !stereoRoutingElement
         || !std::all_of(requiredTags.begin(), requiredTags.end(), [&](juce::String const & tag) {
                return xml.hasAttribute(tag);
@@ -927,19 +957,21 @@ tl::optional<AppData> AppData::fromXml(juce::XmlElement const & xml)
     }
 
     auto const audioSettings{ AudioSettings::fromXml(*audioSettingsElement) };
+    auto const networkSettings{ NetworkSettings::fromXml(*networkSettingsElement) };
     auto const recordingOptions{ RecordingOptions::fromXml(*recordingOptionsElement) };
     auto const cameraPosition{ CartesianVector::fromXml(*cameraPositionElement) };
     auto const viewSettings{ ViewSettings::fromXml(*viewSettingsElement) };
     auto const lastStereoMode{ stringToStereoMode(xml.getStringAttribute(XmlTags::LAST_STEREO_MODE)) };
     auto const stereoRouting{ StereoRouting::fromXml(*stereoRoutingElement) };
 
-    if (!audioSettings || !recordingOptions || !cameraPosition || !viewSettings || !stereoRouting) {
+    if (!audioSettings || !networkSettings || !recordingOptions || !cameraPosition || !viewSettings || !stereoRouting) {
         return tl::nullopt;
     }
 
     AppData result;
 
     result.audioSettings = *audioSettings;
+    result.networkSettings = *networkSettings;
     result.recordingOptions = *recordingOptions;
     result.stereoMode = lastStereoMode;
     result.stereoRouting = *stereoRouting;

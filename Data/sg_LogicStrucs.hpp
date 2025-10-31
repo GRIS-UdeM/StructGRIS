@@ -50,6 +50,7 @@ constexpr auto DEFAULT_UDP_INPUT_PORT = 18023;
 
 constexpr auto DEFAULT_OSC_INPUT_PORT = 18032;
 constexpr auto MAX_OSC_INPUT_PORT = 65535;
+constexpr auto MIN_OSC_INPUT_PORT = 1024;
 
 //==============================================================================
 // TODO: rename SliceState to SpeakerIOState to better reflect its purpose
@@ -340,6 +341,25 @@ struct AudioSettings {
 };
 
 //==============================================================================
+struct NetworkSettings {
+    int oscPort{ DEFAULT_OSC_INPUT_PORT };
+    tl::optional<int> standaloneSpeakerViewInputPort;
+    tl::optional<int> standaloneSpeakerViewOutputPort;
+    tl::optional<juce::String> standaloneSpeakerViewOutputAddress;
+    //==============================================================================
+    [[nodiscard]] std::unique_ptr<juce::XmlElement> toXml() const;
+    [[nodiscard]] static tl::optional<NetworkSettings> fromXml(juce::XmlElement const & xml);
+    //==============================================================================
+    struct XmlTags {
+        static juce::String const MAIN_TAG;
+        static juce::String const OSC_INPUT_PORT;
+        static juce::String const STANDALONE_SPEAKERVIEW_INPUT_PORT;
+        static juce::String const STANDALONE_SPEAKERVIEW_OUTPUT_PORT;
+        static juce::String const STANDALONE_SPEAKERVIEW_OUTPUT_ADDRESS;
+    };
+};
+
+//==============================================================================
 enum class RecordingFormat : std::uint8_t {
     wav,
     aiff
@@ -396,10 +416,6 @@ struct ProjectData {
     SourcesData sources{};
     SourcesOrdering ordering{};
     MbapDistanceAttenuationData mbapDistanceAttenuationData{};
-    int oscPort{ DEFAULT_OSC_INPUT_PORT };
-    tl::optional<int> standaloneSpeakerViewInputPort;
-    tl::optional<int> standaloneSpeakerViewOutputPort;
-    tl::optional<juce::String> standaloneSpeakerViewOutputAddress;
     dbfs_t masterGain{};
     float spatGainsInterpolation{};
     SpatMode spatMode{};
@@ -421,10 +437,6 @@ struct ProjectData {
         static juce::String const SOURCES;
         static juce::String const MASTER_GAIN;
         static juce::String const GAIN_INTERPOLATION;
-        static juce::String const OSC_PORT;
-        static juce::String const STANDALONE_SPEAKERVIEW_INPUT_PORT;
-        static juce::String const STANDALONE_SPEAKERVIEW_OUTPUT_PORT;
-        static juce::String const STANDALONE_SPEAKERVIEW_OUTPUT_ADDRESS;
         static juce::String const USE_MULTICORE_DSP;
     };
 };
@@ -432,6 +444,7 @@ struct ProjectData {
 //==============================================================================
 struct AppData {
     AudioSettings audioSettings{};
+    NetworkSettings networkSettings{};
     RecordingOptions recordingOptions{};
     ViewSettings viewSettings{};
     CartesianVector cameraPosition{ -0.5256794095039368f, -2.008379459381104f, 1.312143206596375f };
