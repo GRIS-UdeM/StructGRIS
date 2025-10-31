@@ -39,15 +39,15 @@ public:
     //==============================================================================
     [[nodiscard]] constexpr degrees_t centered() const noexcept;
     [[nodiscard]] constexpr degrees_t madePositive() const noexcept;
-    [[nodiscard]] constexpr type getAsDegrees () const noexcept { return mValue; }
-    [[nodiscard]] constexpr type getAsRadians () const noexcept { return mValue / DEGREE_PER_RADIAN; }
+    [[nodiscard]] constexpr type getAsDegrees() const noexcept { return mValue; }
+    [[nodiscard]] constexpr type getAsRadians() const noexcept { return mValue / DEGREE_PER_RADIAN; }
 
-    [[nodiscard]] static degrees_t angleOf (juce::Point<type> const& point) noexcept
+    [[nodiscard]] static degrees_t angleOf(juce::Point<type> const & point) noexcept
     {
         if (std::fpclassify(point.getX()) == FP_ZERO && std::fpclassify(point.getY()) == FP_ZERO) {
-            return degrees_t {};
+            return degrees_t{};
         }
-        return degrees_t { std::atan2 (point.getY (), point.getX ()) * DEGREE_PER_RADIAN };
+        return degrees_t{ std::atan2(point.getY(), point.getX()) * DEGREE_PER_RADIAN };
     }
 };
 

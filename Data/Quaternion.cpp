@@ -16,8 +16,8 @@
 */
 
 #include "Quaternion.hpp"
-#include <cmath>
 #include "StrongTypes/sg_Radians.hpp"
+#include <cmath>
 
 namespace gris
 {

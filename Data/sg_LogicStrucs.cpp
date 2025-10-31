@@ -96,8 +96,7 @@ juce::String const ProjectData::XmlTags::SPAT_MODE = "SPAT_MODE";
 juce::String const ProjectData::XmlTags::SOURCES = "SOURCES";
 juce::String const ProjectData::XmlTags::MASTER_GAIN = "MASTER_GAIN";
 juce::String const ProjectData::XmlTags::GAIN_INTERPOLATION = "GAIN_INTERPOLATION";
-juce::String const ProjectData::XmlTags::USE_MULTICORE_DSP
-  = "USE_MULTICORE_DSP";
+juce::String const ProjectData::XmlTags::USE_MULTICORE_DSP = "USE_MULTICORE_DSP";
 
 juce::String const AppData::XmlTags::MAIN_TAG = "SPAT_GRIS_APP_DATA";
 juce::String const AppData::XmlTags::LAST_SPEAKER_SETUP = "LAST_SPEAKER_SETUP";
@@ -885,10 +884,8 @@ tl::optional<ProjectData> ProjectData::fromXml(juce::XmlElement const & xml)
 bool ProjectData::operator==(ProjectData const & other) const noexcept
 {
     return other.ordering == ordering && other.spatGainsInterpolation == spatGainsInterpolation
-           && other.masterGain == masterGain
-           && other.mbapDistanceAttenuationData == mbapDistanceAttenuationData && other.sources == sources
-           && other.spatMode == spatMode
-           && other.useMulticoreDSP == useMulticoreDSP;
+           && other.masterGain == masterGain && other.mbapDistanceAttenuationData == mbapDistanceAttenuationData
+           && other.sources == sources && other.spatMode == spatMode && other.useMulticoreDSP == useMulticoreDSP;
 }
 
 //==============================================================================
@@ -943,8 +940,8 @@ tl::optional<AppData> AppData::fromXml(juce::XmlElement const & xml)
     auto const * viewSettingsElement{ xml.getChildByName(ViewSettings::XmlTags::MAIN_TAG) };
     auto const * stereoRoutingElement{ xml.getChildByName(StereoRouting::XmlTags::MAIN_TAG) };
 
-    if (xml.getTagName() != XmlTags::MAIN_TAG || !audioSettingsElement || !networkSettingsElement || !recordingOptionsElement || !cameraElement
-        || !viewSettingsElement || !stereoRoutingElement
+    if (xml.getTagName() != XmlTags::MAIN_TAG || !audioSettingsElement || !networkSettingsElement
+        || !recordingOptionsElement || !cameraElement || !viewSettingsElement || !stereoRoutingElement
         || !std::all_of(requiredTags.begin(), requiredTags.end(), [&](juce::String const & tag) {
                return xml.hasAttribute(tag);
            })) {

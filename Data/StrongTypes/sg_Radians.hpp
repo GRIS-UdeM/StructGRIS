@@ -19,10 +19,10 @@
 
 #pragma once
 
-#include <cmath>
 #include <JuceHeader.h>
 #include "sg_StrongFloat.hpp"
 #include "juce_core/juce_core.h"
+#include <cmath>
 
 namespace gris
 {
@@ -57,9 +57,9 @@ public:
         // this used to be a simple point.getX/Y() == 0.0f but its technically unsafe
         // for tricky values like -0.0f.
         if (std::fpclassify(point.getX()) == FP_ZERO && std::fpclassify(point.getY()) == FP_ZERO) {
-            return radians_t {};
+            return radians_t{};
         }
-        return radians_t { std::atan2(point.getY(), point.getX()) };
+        return radians_t{ std::atan2(point.getY(), point.getX()) };
     }
 };
 
@@ -93,15 +93,21 @@ constexpr radians_t::radians_t(type const & value) : StrongFloat(value)
 }
 
 //==============================================================================
-[[nodiscard]] constexpr degrees_t radians_t::toDegrees () const noexcept
+[[nodiscard]] constexpr degrees_t radians_t::toDegrees() const noexcept
 {
-    return degrees_t { mValue * degrees_t::DEGREE_PER_RADIAN };
+    return degrees_t{ mValue * degrees_t::DEGREE_PER_RADIAN };
 }
 
 //==============================================================================
-[[nodiscard]] constexpr radians_t::operator degrees_t() const noexcept { return toDegrees (); }
+[[nodiscard]] constexpr radians_t::operator degrees_t() const noexcept
+{
+    return toDegrees();
+}
 
-[[nodiscard]] constexpr float radians_t::getAsDegrees () const noexcept { return mValue * degrees_t::DEGREE_PER_RADIAN; }
+[[nodiscard]] constexpr float radians_t::getAsDegrees() const noexcept
+{
+    return mValue * degrees_t::DEGREE_PER_RADIAN;
+}
 
 //==============================================================================
 constexpr radians_t QUARTER_PI{ juce::MathConstants<radians_t::type>::halfPi / 2.0f };

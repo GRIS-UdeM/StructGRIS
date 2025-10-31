@@ -42,7 +42,6 @@
 #include "../Containers/sg_StaticMap.hpp"
 #include "../Containers/sg_StrongArray.hpp"
 
-
 namespace gris
 {
 constexpr auto DEFAULT_UDP_OUTPUT_PORT = 18022;

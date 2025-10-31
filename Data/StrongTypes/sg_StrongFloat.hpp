@@ -50,15 +50,21 @@ public:
     StrongFloat() = default;
     explicit constexpr StrongFloat(T const & value) : mValue(value) {}
     //==============================================================================
-  [[nodiscard]] constexpr bool operator==(Derived const & other) const { return juce::approximatelyEqual(mValue, other.mValue); }
-  [[nodiscard]] constexpr bool operator!=(Derived const & other) const { return !juce::approximatelyEqual(mValue, other.mValue); }
+    [[nodiscard]] constexpr bool operator==(Derived const & other) const
+    {
+        return juce::approximatelyEqual(mValue, other.mValue);
+    }
+    [[nodiscard]] constexpr bool operator!=(Derived const & other) const
+    {
+        return !juce::approximatelyEqual(mValue, other.mValue);
+    }
     [[nodiscard]] constexpr bool operator<(Derived const & other) const { return mValue < other.mValue; }
     [[nodiscard]] constexpr bool operator>(Derived const & other) const { return mValue > other.mValue; }
     [[nodiscard]] constexpr bool operator<=(Derived const & other) const { return mValue <= other.mValue; }
     [[nodiscard]] constexpr bool operator>=(Derived const & other) const { return mValue >= other.mValue; }
     //==============================================================================
     [[nodiscard]] constexpr type const & get() const { return mValue; }
-    [[nodiscard]] juce::String toString (int const precision = 2) const { return juce::String { mValue, precision }; }
+    [[nodiscard]] juce::String toString(int const precision = 2) const { return juce::String{ mValue, precision }; }
     //==============================================================================
     [[nodiscard]] constexpr Derived operator-() const { return Derived{ -mValue }; }
     [[nodiscard]] constexpr Derived operator+(Derived const & other) const { return Derived{ mValue + other.mValue }; }
@@ -68,7 +74,7 @@ public:
     [[nodiscard]] constexpr type operator/(Derived const & other) const { return mValue / other.mValue; }
     //==============================================================================
     Derived & operator+=(Derived const & other) noexcept;
-    Derived& operator-=(Derived const& other) noexcept;
+    Derived & operator-=(Derived const & other) noexcept;
     Derived & operator*=(type const & mod) noexcept;
     Derived & operator/=(type const & mod) noexcept;
     //==============================================================================
@@ -129,10 +135,10 @@ Derived & StrongFloat<T, Derived, Dummy>::operator+=(Derived const & other) noex
 
 //==============================================================================
 template<typename T, typename Derived, typename Dummy>
-Derived& StrongFloat<T, Derived, Dummy>::operator-=(Derived const& other) noexcept
+Derived & StrongFloat<T, Derived, Dummy>::operator-=(Derived const & other) noexcept
 {
     mValue -= other.mValue;
-    return *static_cast<Derived*>(this);
+    return *static_cast<Derived *>(this);
 }
 
 //==============================================================================
@@ -156,8 +162,8 @@ Derived & StrongFloat<T, Derived, Dummy>::operator/=(type const & mod) noexcept
 class Normalized final : public StrongFloat<float, Normalized, struct NormalizedT>
 {
 public:
-    Normalized () = default;
-    explicit constexpr Normalized (type const& value) : StrongFloat (value) {}
+    Normalized() = default;
+    explicit constexpr Normalized(type const & value) : StrongFloat(value) {}
 };
 
 } // namespace gris

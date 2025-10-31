@@ -18,7 +18,7 @@
 */
 
 #pragma once
- #include <JuceHeader.h>
+#include <JuceHeader.h>
 #include "../sg_Macros.hpp"
 #include "../sg_constants.hpp"
 #include "juce_core/juce_core.h"
@@ -114,7 +114,8 @@ constexpr CartesianVector::CartesianVector(float const newX, float const newY, f
 //==============================================================================
 inline bool CartesianVector::operator==(CartesianVector const & other) const noexcept
 {
-  return juce::approximatelyEqual(x, other.x) && juce::approximatelyEqual(y, other.y) && juce::approximatelyEqual(z, other.z);
+    return juce::approximatelyEqual(x, other.x) && juce::approximatelyEqual(y, other.y)
+           && juce::approximatelyEqual(z, other.z);
 }
 
 //==============================================================================
