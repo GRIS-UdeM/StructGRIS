@@ -421,8 +421,12 @@ struct ProjectData {
     /**
      * wether or not mbap and vbap processing should be parallelized.
      */
-    bool useMulticoreDSP{};
+    bool useMulticoreDSP{ false };
 
+    /**
+     *
+     */
+    int multicoreDSPPreset{ OPTIMIZE_CPU_MULTICORE_PRESET };
     //==============================================================================
     [[nodiscard]] std::unique_ptr<juce::XmlElement> toXml() const;
     [[nodiscard]] static tl::optional<ProjectData> fromXml(juce::XmlElement const & xml);
@@ -437,6 +441,7 @@ struct ProjectData {
         static juce::String const MASTER_GAIN;
         static juce::String const GAIN_INTERPOLATION;
         static juce::String const USE_MULTICORE_DSP;
+        static juce::String const MULTICORE_DSP_PRESET;
     };
 };
 
