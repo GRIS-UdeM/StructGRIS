@@ -105,14 +105,5 @@ extern juce::Colour const DEFAULT_SOURCE_COLOR;
 //==============================================================================
 extern juce::StringArray const RECORDING_FORMAT_STRINGS;
 extern juce::StringArray const RECORDING_FILE_TYPE_STRINGS;
-extern juce::StringArray const ATTENUATION_DB_STRINGS;
-extern juce::StringArray const ATTENUATION_FREQUENCY_STRINGS;
-
-extern juce::Array<int> const ATTENUATION_DB_VALUES;
-extern juce::Array<int> const ATTENUATION_FREQUENCY_VALUES;
-
-//==============================================================================
-[[nodiscard]] tl::optional<int> attenuationDbToComboBoxIndex(dbfs_t attenuation);
-[[nodiscard]] tl::optional<int> attenuationFreqToComboBoxIndex(hz_t freq);
 
 } // namespace gris

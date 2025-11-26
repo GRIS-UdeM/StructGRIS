@@ -44,10 +44,6 @@ juce::StringArray const RECORDING_FORMAT_STRINGS{ "WAV",
 #endif
 };
 juce::StringArray const RECORDING_FILE_TYPE_STRINGS{ "Mono Files", "Interleaved" };
-juce::Array<int> const ATTENUATION_DB_VALUES{ 0, -12, -24, -36, -48, -60, -72 };
-juce::StringArray const ATTENUATION_DB_STRINGS{ "0", "-12", "-24", "-36", "-48", "-60", "-72" };
-juce::Array<int> const ATTENUATION_FREQUENCY_VALUES{ 125, 250, 500, 1000, 2000, 4000, 8000, 16000 };
-juce::StringArray const ATTENUATION_FREQUENCY_STRINGS{ "125", "250", "500", "1000", "2000", "4000", "8000", "16000" };
 
 //==============================================================================
 template<typename T>
@@ -61,30 +57,6 @@ static juce::Array<T> stringToStronglyTypedFloat(juce::StringArray const & strin
         result.add(T{ string.getFloatValue() });
     }
     return result;
-}
-
-//==============================================================================
-tl::optional<int> attenuationDbToComboBoxIndex(dbfs_t const attenuation)
-{
-    static auto const ALLOWED_VALUES = stringToStronglyTypedFloat<dbfs_t>(ATTENUATION_DB_STRINGS);
-
-    auto const index{ ALLOWED_VALUES.indexOf(attenuation) };
-    if (index < 0) {
-        return tl::nullopt;
-    }
-    return index + 1;
-}
-
-//==============================================================================
-tl::optional<int> attenuationFreqToComboBoxIndex(hz_t const freq)
-{
-    static auto const ALLOWED_VALUES = stringToStronglyTypedFloat<hz_t>(ATTENUATION_FREQUENCY_STRINGS);
-
-    auto const index{ ALLOWED_VALUES.indexOf(freq) };
-    if (index < 0) {
-        return tl::nullopt;
-    }
-    return index + 1;
 }
 
 } // namespace gris
