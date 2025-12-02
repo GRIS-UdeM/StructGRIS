@@ -1184,6 +1184,7 @@ std::unique_ptr<AudioConfig> SpatGrisData::toAudioConfig() const
         = project.mbapDistanceAttenuationData.toConfig(appData.audioSettings.sampleRate, shouldProcessAttenuation);
     result->masterGain = project.masterGain.toGain();
     result->pinkNoiseGain = pinkNoiseLevel.map([](auto const & level) { return level.toGain(); });
+    result->pinkNoisePulsed = pinkNoisePulsed;
     for (auto const source : project.sources) {
         result->sourcesAudioConfig.add(source.key, source.value->toConfig(isAtLeastOneSourceSolo));
     }

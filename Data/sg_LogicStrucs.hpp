@@ -530,6 +530,7 @@ struct SpatGrisData {
     ProjectData project{};
     AppData appData{};
     tl::optional<dbfs_t> pinkNoiseLevel{};
+    bool pinkNoisePulsed{};
     AtomicUpdater<SourcePeaks>::Token * mostRecentSourcePeaks{};
     AtomicUpdater<SpeakerPeaks>::Token * mostRecentSpeakerPeaks{};
     AtomicUpdater<StereoPeaks>::Token * mostRecentStereoPeaks{};
