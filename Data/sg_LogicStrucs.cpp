@@ -1103,7 +1103,7 @@ tl::optional<SpeakerSetup> SpeakerSetup::fromXml(juce::XmlElement const & xml)
 bool SpeakerSetup::operator==(SpeakerSetup const & other) const noexcept
 {
     return other.ordering == ordering && other.speakers == speakers && other.spatMode == spatMode
-           && other.diffusion == diffusion;
+           && other.diffusion == diffusion && other.generalMute == generalMute;
 }
 
 //==============================================================================
