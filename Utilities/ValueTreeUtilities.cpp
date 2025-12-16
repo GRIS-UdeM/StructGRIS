@@ -59,6 +59,10 @@ juce::File getHrtfDirectory()
         dir = dir.getChildFile("submodules/AlgoGRIS/");
 
     dir = dir.getChildFile("hrtf_compact");
+    if (!dir.exists()) {
+        // this means SG is executed outside of the IDE or test environment (Release build)
+        dir = SG_RESOURCES_DIR.getChildFile("hrtf_compact");
+    }
     jassert(dir.exists());
     return dir;
 }

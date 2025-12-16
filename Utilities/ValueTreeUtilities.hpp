@@ -20,6 +20,17 @@
 
 namespace gris
 {
+// copied from SpatGRIS/Misc/sg_DefaultFiles.h to access Resources folder in the Release build
+#if defined(__linux__) || defined(WIN32)
+    juce::File const SG_CURRENT_WORKING_DIR{ juce::File::getCurrentWorkingDirectory() };
+    auto const SG_RESOURCES_DIR{ SG_CURRENT_WORKING_DIR.getChildFile("Resources") };
+#elif defined(__APPLE__)
+    juce::File const SG_CURRENT_WORKING_DIR = juce::File::getSpecialLocation(juce::File::currentApplicationFile);
+    auto const SG_RESOURCES_DIR{ SG_CURRENT_WORKING_DIR.getChildFile("Contents").getChildFile("Resources") };
+#else
+    static_assert(false, "What are you building this on?");
+#endif
+
 /**
  * @brief Returns the current working directory, or its parent if the current directory is the build/Builds
  * directory. This is useful because juce returns different directories as the working directory on the pipeline vs
