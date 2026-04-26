@@ -79,6 +79,11 @@ juce::String const StereoRouting::XmlTags::MAIN_TAG = "STEREO_ROUTING";
 juce::String const StereoRouting::XmlTags::LEFT = "LEFT";
 juce::String const StereoRouting::XmlTags::RIGHT = "RIGHT";
 
+juce::String const BinauralSettings::XmlTags::MAIN_TAG = "BINAURAL_SETTINGS";
+juce::String const BinauralSettings::XmlTags::LAST_SOFA_FILE = "LAST_SOFA_FILE";
+juce::String const BinauralSettings::XmlTags::AMBISONIC_ORDER = "AMBISONIC_ORDER";
+juce::String const BinauralSettings::XmlTags::USE_LOW_CPU_MODE = "USE_LOW_CPU_MODE";
+
 juce::String const ViewSettings::XmlTags::MAIN_TAG = "VIEW_SETTINGS";
 juce::String const ViewSettings::XmlTags::KEEP_SPEAKERVIEW_ON_TOP = "KEEP_SPEAKERVIEW_ON_TOP";
 juce::String const ViewSettings::XmlTags::SHOW_HALL = "SHOW_HALL";
@@ -737,6 +742,33 @@ tl::optional<StereoRouting> StereoRouting::fromXml(juce::XmlElement const & xml)
 }
 
 //==============================================================================
+std::unique_ptr<juce::XmlElement> BinauralSettings::toXml() const
+{
+    auto result{ std::make_unique<juce::XmlElement>(XmlTags::MAIN_TAG) };
+
+    result->setAttribute(XmlTags::LAST_SOFA_FILE, lastSofaFile);
+    result->setAttribute(XmlTags::AMBISONIC_ORDER, ambisonicOrder);
+    result->setAttribute(XmlTags::USE_LOW_CPU_MODE, lowCpuMode);
+
+    return result;
+}
+
+//==============================================================================
+tl::optional<BinauralSettings> BinauralSettings::fromXml(juce::XmlElement const & xml)
+{
+    if (xml.getTagName() != XmlTags::MAIN_TAG || !xml.hasAttribute(XmlTags::LAST_SOFA_FILE)
+        || !xml.hasAttribute(XmlTags::AMBISONIC_ORDER) || !xml.hasAttribute(XmlTags::USE_LOW_CPU_MODE)) {
+        return tl::nullopt;
+    }
+
+    BinauralSettings result;
+    result.lastSofaFile = xml.getStringAttribute(XmlTags::LAST_SOFA_FILE);
+    result.ambisonicOrder = xml.getIntAttribute(XmlTags::AMBISONIC_ORDER, 3);
+    result.lowCpuMode = xml.getBoolAttribute(XmlTags::USE_LOW_CPU_MODE, false);
+    return result;
+}
+
+//==============================================================================
 std::unique_ptr<juce::XmlElement> ViewSettings::toXml() const
 {
     auto result{ std::make_unique<juce::XmlElement>(XmlTags::MAIN_TAG) };
@@ -908,6 +940,7 @@ std::unique_ptr<juce::XmlElement> AppData::toXml() const
     result->addChildElement(cameraElement.release());
     result->addChildElement(viewSettings.toXml().release());
     result->addChildElement(stereoRouting.toXml().release());
+    result->addChildElement(binaraulSettings.toXml().release());
 
     result->setAttribute(XmlTags::LAST_SPEAKER_SETUP, lastSpeakerSetup);
     result->setAttribute(XmlTags::LAST_PROJECT, lastProject);
@@ -945,9 +978,11 @@ tl::optional<AppData> AppData::fromXml(juce::XmlElement const & xml)
     auto const * cameraElement{ xml.getChildByName(XmlTags::CAMERA) };
     auto const * viewSettingsElement{ xml.getChildByName(ViewSettings::XmlTags::MAIN_TAG) };
     auto const * stereoRoutingElement{ xml.getChildByName(StereoRouting::XmlTags::MAIN_TAG) };
+    auto const * binauralSettingsElement{ xml.getChildByName(BinauralSettings::XmlTags::MAIN_TAG) };
 
     if (xml.getTagName() != XmlTags::MAIN_TAG || !audioSettingsElement || !networkSettingsElement
         || !recordingOptionsElement || !cameraElement || !viewSettingsElement || !stereoRoutingElement
+        || !binauralSettingsElement
         || !std::all_of(requiredTags.begin(), requiredTags.end(), [&](juce::String const & tag) {
                return xml.hasAttribute(tag);
            })) {
@@ -966,8 +1001,10 @@ tl::optional<AppData> AppData::fromXml(juce::XmlElement const & xml)
     auto const viewSettings{ ViewSettings::fromXml(*viewSettingsElement) };
     auto const lastStereoMode{ stringToStereoMode(xml.getStringAttribute(XmlTags::LAST_STEREO_MODE)) };
     auto const stereoRouting{ StereoRouting::fromXml(*stereoRoutingElement) };
+    auto const binauralSettings{ BinauralSettings::fromXml(*binauralSettingsElement) };
 
-    if (!audioSettings || !networkSettings || !recordingOptions || !cameraPosition || !viewSettings || !stereoRouting) {
+    if (!audioSettings || !networkSettings || !recordingOptions || !cameraPosition || !viewSettings || !stereoRouting
+        || !binauralSettings) {
         return tl::nullopt;
     }
 
@@ -978,6 +1015,7 @@ tl::optional<AppData> AppData::fromXml(juce::XmlElement const & xml)
     result.recordingOptions = *recordingOptions;
     result.stereoMode = lastStereoMode;
     result.stereoRouting = *stereoRouting;
+    result.binaraulSettings = *binauralSettings;
 
     result.lastSpeakerSetup = xml.getStringAttribute(XmlTags::LAST_SPEAKER_SETUP);
     result.lastProject = xml.getStringAttribute(XmlTags::LAST_PROJECT);

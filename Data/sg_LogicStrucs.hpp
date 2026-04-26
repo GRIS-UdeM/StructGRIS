@@ -408,6 +408,23 @@ struct StereoRouting {
 };
 
 //==============================================================================
+struct BinauralSettings {
+    juce::String lastSofaFile{};
+    int ambisonicOrder{ 3 };
+    bool lowCpuMode{};
+    //==============================================================================
+    [[nodiscard]] std::unique_ptr<juce::XmlElement> toXml() const;
+    [[nodiscard]] static tl::optional<BinauralSettings> fromXml(juce::XmlElement const & xml);
+    //==============================================================================
+    struct XmlTags {
+        static juce::String const MAIN_TAG;
+        static juce::String const LAST_SOFA_FILE;
+        static juce::String const AMBISONIC_ORDER;
+        static juce::String const USE_LOW_CPU_MODE;
+    };
+};
+
+//==============================================================================
 using SourcesOrdering = juce::Array<source_index_t>;
 
 //==============================================================================
@@ -463,6 +480,7 @@ struct AppData {
     };
     tl::optional<StereoMode> stereoMode{};
     StereoRouting stereoRouting{};
+    BinauralSettings binaraulSettings{};
     bool playerExists{};
     int windowX{ 100 };
     int windowY{ 100 };

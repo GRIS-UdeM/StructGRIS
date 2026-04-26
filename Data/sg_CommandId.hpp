@@ -34,6 +34,12 @@ enum CommandId : std::uint16_t {
     saveSpeakerSetupId,
     saveSpeakerSetupAsId,
 
+    openSofaFileId,
+    setAmbisonicOrder1,
+    setAmbisonicOrder2,
+    setAmbisonicOrder3,
+    useLowCpuMode,
+
     openSettingsWindowId,
 
     quitId,
