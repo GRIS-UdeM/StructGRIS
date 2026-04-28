@@ -480,7 +480,7 @@ struct AppData {
     };
     tl::optional<StereoMode> stereoMode{};
     StereoRouting stereoRouting{};
-    BinauralSettings binaraulSettings{};
+    BinauralSettings binauralSettings{};
     bool playerExists{};
     int windowX{ 100 };
     int windowY{ 100 };

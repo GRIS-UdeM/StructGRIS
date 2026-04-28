@@ -940,7 +940,7 @@ std::unique_ptr<juce::XmlElement> AppData::toXml() const
     result->addChildElement(cameraElement.release());
     result->addChildElement(viewSettings.toXml().release());
     result->addChildElement(stereoRouting.toXml().release());
-    result->addChildElement(binaraulSettings.toXml().release());
+    result->addChildElement(binauralSettings.toXml().release());
 
     result->setAttribute(XmlTags::LAST_SPEAKER_SETUP, lastSpeakerSetup);
     result->setAttribute(XmlTags::LAST_PROJECT, lastProject);
@@ -1015,7 +1015,7 @@ tl::optional<AppData> AppData::fromXml(juce::XmlElement const & xml)
     result.recordingOptions = *recordingOptions;
     result.stereoMode = lastStereoMode;
     result.stereoRouting = *stereoRouting;
-    result.binaraulSettings = *binauralSettings;
+    result.binauralSettings = *binauralSettings;
 
     result.lastSpeakerSetup = xml.getStringAttribute(XmlTags::LAST_SPEAKER_SETUP);
     result.lastProject = xml.getStringAttribute(XmlTags::LAST_PROJECT);
