@@ -81,11 +81,8 @@ juce::String const StereoRouting::XmlTags::RIGHT = "RIGHT";
 
 juce::String const BinauralSettings::XmlTags::MAIN_TAG = "BINAURAL_SETTINGS";
 juce::String const BinauralSettings::XmlTags::LAST_SOFA_FILE = "LAST_SOFA_FILE";
-juce::String const BinauralSettings::XmlTags::BINAURAL_RENDERER = "BINAURAL_RENDERER";
 juce::String const BinauralSettings::XmlTags::USE_DEFAULT_HRIRS = "USE_DEFAULT_HRIRS";
 juce::String const BinauralSettings::XmlTags::ENABLE_HRIRS_DIFFUSE_EQ = "ENABLE_HRIRS_DIFFUSE_EQ";
-juce::String const BinauralSettings::XmlTags::AMBISONIC_ORDER = "AMBISONIC_ORDER";
-juce::String const BinauralSettings::XmlTags::USE_LOW_CPU_MODE = "USE_LOW_CPU_MODE";
 
 juce::String const ViewSettings::XmlTags::MAIN_TAG = "VIEW_SETTINGS";
 juce::String const ViewSettings::XmlTags::KEEP_SPEAKERVIEW_ON_TOP = "KEEP_SPEAKERVIEW_ON_TOP";
@@ -184,28 +181,6 @@ AttenuationBypassSate stringToAttenuationBypassState(juce::String const & string
         return AttenuationBypassSate::off;
     }
     return AttenuationBypassSate::invalid;
-}
-
-//==============================================================================
-juce::String binauralRendererToString(BinauralRenderer renderer)
-{
-    switch (renderer) {
-    case BinauralRenderer::saf:
-        return "saf";
-    case BinauralRenderer::spatialaudio:
-        return "spatialaudio";
-    }
-    jassertfalse;
-    return "";
-}
-
-//==============================================================================
-BinauralRenderer stringToBinauralRenderer(juce::String const & string)
-{
-    if (string == "spatialaudio") {
-        return BinauralRenderer::spatialaudio;
-    }
-    return BinauralRenderer::saf;
 }
 
 //==============================================================================
@@ -772,11 +747,8 @@ std::unique_ptr<juce::XmlElement> BinauralSettings::toXml() const
     auto result{ std::make_unique<juce::XmlElement>(XmlTags::MAIN_TAG) };
 
     result->setAttribute(XmlTags::LAST_SOFA_FILE, lastSofaFile);
-    result->setAttribute(XmlTags::BINAURAL_RENDERER, binauralRendererToString(renderer));
     result->setAttribute(XmlTags::USE_DEFAULT_HRIRS, useDefaultHRIRs);
     result->setAttribute(XmlTags::ENABLE_HRIRS_DIFFUSE_EQ, enableHRIRsDiffuseEQ);
-    result->setAttribute(XmlTags::AMBISONIC_ORDER, ambisonicOrder);
-    result->setAttribute(XmlTags::USE_LOW_CPU_MODE, lowCpuMode);
 
     return result;
 }
@@ -785,19 +757,14 @@ std::unique_ptr<juce::XmlElement> BinauralSettings::toXml() const
 tl::optional<BinauralSettings> BinauralSettings::fromXml(juce::XmlElement const & xml)
 {
     if (xml.getTagName() != XmlTags::MAIN_TAG || !xml.hasAttribute(XmlTags::LAST_SOFA_FILE)
-        || !xml.hasAttribute(XmlTags::BINAURAL_RENDERER) || !xml.hasAttribute(XmlTags::USE_DEFAULT_HRIRS)
-        || !xml.hasAttribute(XmlTags::ENABLE_HRIRS_DIFFUSE_EQ) || !xml.hasAttribute(XmlTags::AMBISONIC_ORDER)
-        || !xml.hasAttribute(XmlTags::USE_LOW_CPU_MODE)) {
+        || !xml.hasAttribute(XmlTags::USE_DEFAULT_HRIRS) || !xml.hasAttribute(XmlTags::ENABLE_HRIRS_DIFFUSE_EQ)) {
         return tl::nullopt;
     }
 
     BinauralSettings result;
     result.lastSofaFile = xml.getStringAttribute(XmlTags::LAST_SOFA_FILE);
-    result.renderer = stringToBinauralRenderer(xml.getStringAttribute(XmlTags::BINAURAL_RENDERER));
     result.useDefaultHRIRs = xml.getBoolAttribute(XmlTags::USE_DEFAULT_HRIRS, true);
     result.enableHRIRsDiffuseEQ = xml.getBoolAttribute(XmlTags::ENABLE_HRIRS_DIFFUSE_EQ, true);
-    result.ambisonicOrder = xml.getIntAttribute(XmlTags::AMBISONIC_ORDER, 3);
-    result.lowCpuMode = xml.getBoolAttribute(XmlTags::USE_LOW_CPU_MODE, false);
     return result;
 }
 

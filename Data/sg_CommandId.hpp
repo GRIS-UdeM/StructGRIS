@@ -35,14 +35,8 @@ enum CommandId : std::uint16_t {
     saveSpeakerSetupAsId,
 
     openSofaFileId,
-    setBinauralRendrerSAF,
     setUseDefaultBinauralHRIRs,
     setEnableHRIRsDiffuseEQ,
-    setBinauralRendrerSpatialaudio,
-    setAmbisonicOrder1,
-    setAmbisonicOrder2,
-    setAmbisonicOrder3,
-    useLowCpuMode,
 
     openSettingsWindowId,
 

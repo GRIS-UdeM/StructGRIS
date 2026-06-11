@@ -68,11 +68,6 @@ enum class AttenuationBypassSate : std::uint8_t { invalid, on, off };
 [[nodiscard]] juce::String attenuationBypassStateToString(AttenuationBypassSate state);
 [[nodiscard]] AttenuationBypassSate stringToAttenuationBypassState(juce::String const & string);
 
-//==============================================================================
-enum class BinauralRenderer : std::uint8_t { saf, spatialaudio };
-[[nodiscard]] juce::String binauralRendererToString(BinauralRenderer renderer);
-[[nodiscard]] BinauralRenderer stringToBinauralRenderer(juce::String const & string);
-
 // warns if float can't be lock free on this specific platform.
 static_assert(std::atomic_ref<float>::is_always_lock_free, "float cannot be converted to a lock-free atomic_ref!");
 
@@ -415,7 +410,6 @@ struct StereoRouting {
 //==============================================================================
 struct BinauralSettings {
     juce::String lastSofaFile{};
-    BinauralRenderer renderer{ BinauralRenderer::saf };
     bool useDefaultHRIRs{ true };
     bool enableHRIRsDiffuseEQ{ true };
     int ambisonicOrder{ 3 };
@@ -427,11 +421,8 @@ struct BinauralSettings {
     struct XmlTags {
         static juce::String const MAIN_TAG;
         static juce::String const LAST_SOFA_FILE;
-        static juce::String const BINAURAL_RENDERER;
         static juce::String const USE_DEFAULT_HRIRS;
         static juce::String const ENABLE_HRIRS_DIFFUSE_EQ;
-        static juce::String const AMBISONIC_ORDER;
-        static juce::String const USE_LOW_CPU_MODE;
     };
 };
 
