@@ -412,8 +412,6 @@ struct BinauralSettings {
     juce::String lastSofaFile{};
     bool useDefaultHRIRs{ true };
     bool enableHRIRsDiffuseEQ{ true };
-    int ambisonicOrder{ 3 };
-    bool lowCpuMode{};
     //==============================================================================
     [[nodiscard]] std::unique_ptr<juce::XmlElement> toXml() const;
     [[nodiscard]] static tl::optional<BinauralSettings> fromXml(juce::XmlElement const & xml);
