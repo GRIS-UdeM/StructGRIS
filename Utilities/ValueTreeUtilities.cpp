@@ -134,9 +134,15 @@ juce::ValueTree convertSpeakerSetup(const juce::ValueTree & oldSpeakerSetup)
         return {};
     }
 
-    // get outta here if the version is already up to date
-    if (oldSpeakerSetup[SPEAKER_SETUP_VERSION] == CURRENT_SPEAKER_SETUP_VERSION)
+    // get outta here if the version is newer or already up to date
+    if (oldSpeakerSetup[SPEAKER_SETUP_VERSION] == CURRENT_SPEAKER_SETUP_VERSION) {
         return oldSpeakerSetup;
+    } else {
+        auto const oldVersion{ SpatGrisVersion::fromString(oldSpeakerSetup[SPEAKER_SETUP_VERSION].toString()) };
+        if (oldVersion.compare(SPAT_GRIS_VERSION) > 0) {
+            return oldSpeakerSetup;
+        }
+    }
 
     // create new value tree and copy root properties into it
     auto newSpeakerSetupVt = juce::ValueTree(SPEAKER_SETUP);

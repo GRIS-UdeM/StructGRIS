@@ -1093,8 +1093,16 @@ tl::optional<SpeakerSetup> SpeakerSetup::fromXml(juce::XmlElement const & xml)
     // if it's not legacy, convert it here, and get outta here if the conversion failed
     juce::ValueTree vt{ convertSpeakerSetup(juce::ValueTree::fromXml(xml)) };
     if (vt[SPEAKER_SETUP_VERSION] != CURRENT_SPEAKER_SETUP_VERSION) {
-        jassertfalse;
-        return {};
+        auto const vtVersion{ SpatGrisVersion::fromString(vt[SPEAKER_SETUP_VERSION].toString()) };
+        if (vtVersion.compare(SPAT_GRIS_VERSION) > 0) {
+            // this is a newer speaker setup. It will be set to nullopt in MainContentComponent::extractSpeakerSetup
+            auto speakerSetup{ tl::optional<SpeakerSetup>(SpeakerSetup{}) };
+            speakerSetup->speakerSetupValueTree = vt;
+            return speakerSetup;
+        } else {
+            jassertfalse;
+            return {};
+        }
     }
 
     // value tree conversion succeeded, now fill a SpeakerSetup
