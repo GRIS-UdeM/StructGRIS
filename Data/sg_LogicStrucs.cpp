@@ -81,8 +81,7 @@ juce::String const StereoRouting::XmlTags::RIGHT = "RIGHT";
 
 juce::String const BinauralSettings::XmlTags::MAIN_TAG = "BINAURAL_SETTINGS";
 juce::String const BinauralSettings::XmlTags::LAST_SOFA_FILE = "LAST_SOFA_FILE";
-juce::String const BinauralSettings::XmlTags::USE_DEFAULT_HRIRS = "USE_DEFAULT_HRIRS";
-juce::String const BinauralSettings::XmlTags::ENABLE_HRIRS_DIFFUSE_EQ = "ENABLE_HRIRS_DIFFUSE_EQ";
+juce::String const BinauralSettings::XmlTags::USE_DEFAULT_PROFILE = "USE_DEFAULT_PROFILE";
 
 juce::String const ViewSettings::XmlTags::MAIN_TAG = "VIEW_SETTINGS";
 juce::String const ViewSettings::XmlTags::KEEP_SPEAKERVIEW_ON_TOP = "KEEP_SPEAKERVIEW_ON_TOP";
@@ -747,8 +746,7 @@ std::unique_ptr<juce::XmlElement> BinauralSettings::toXml() const
     auto result{ std::make_unique<juce::XmlElement>(XmlTags::MAIN_TAG) };
 
     result->setAttribute(XmlTags::LAST_SOFA_FILE, lastSofaFile);
-    result->setAttribute(XmlTags::USE_DEFAULT_HRIRS, useDefaultHRIRs);
-    result->setAttribute(XmlTags::ENABLE_HRIRS_DIFFUSE_EQ, enableHRIRsDiffuseEQ);
+    result->setAttribute(XmlTags::USE_DEFAULT_PROFILE, useDefaultBinauralProfile);
 
     return result;
 }
@@ -757,14 +755,13 @@ std::unique_ptr<juce::XmlElement> BinauralSettings::toXml() const
 tl::optional<BinauralSettings> BinauralSettings::fromXml(juce::XmlElement const & xml)
 {
     if (xml.getTagName() != XmlTags::MAIN_TAG || !xml.hasAttribute(XmlTags::LAST_SOFA_FILE)
-        || !xml.hasAttribute(XmlTags::USE_DEFAULT_HRIRS) || !xml.hasAttribute(XmlTags::ENABLE_HRIRS_DIFFUSE_EQ)) {
+        || !xml.hasAttribute(XmlTags::USE_DEFAULT_PROFILE)) {
         return tl::nullopt;
     }
 
     BinauralSettings result;
     result.lastSofaFile = xml.getStringAttribute(XmlTags::LAST_SOFA_FILE);
-    result.useDefaultHRIRs = xml.getBoolAttribute(XmlTags::USE_DEFAULT_HRIRS, true);
-    result.enableHRIRsDiffuseEQ = xml.getBoolAttribute(XmlTags::ENABLE_HRIRS_DIFFUSE_EQ, true);
+    result.useDefaultBinauralProfile = xml.getBoolAttribute(XmlTags::USE_DEFAULT_PROFILE, true);
     return result;
 }
 

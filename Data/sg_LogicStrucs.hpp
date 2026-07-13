@@ -410,8 +410,7 @@ struct StereoRouting {
 //==============================================================================
 struct BinauralSettings {
     juce::String lastSofaFile{};
-    bool useDefaultHRIRs{ true };
-    bool enableHRIRsDiffuseEQ{ true };
+    bool useDefaultBinauralProfile{ true };
     //==============================================================================
     [[nodiscard]] std::unique_ptr<juce::XmlElement> toXml() const;
     [[nodiscard]] static tl::optional<BinauralSettings> fromXml(juce::XmlElement const & xml);
@@ -419,8 +418,7 @@ struct BinauralSettings {
     struct XmlTags {
         static juce::String const MAIN_TAG;
         static juce::String const LAST_SOFA_FILE;
-        static juce::String const USE_DEFAULT_HRIRS;
-        static juce::String const ENABLE_HRIRS_DIFFUSE_EQ;
+        static juce::String const USE_DEFAULT_PROFILE;
     };
 };
 
