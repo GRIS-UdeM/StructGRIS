@@ -38,8 +38,6 @@ static_assert(false, "What are you building this on?");
  */
 juce::File getValidCurrentDirectory();
 
-juce::File getHrtfDirectory();
-
 /** Converts properties between versions of Speaker Setups.
  * Returns true if the conversion was successful, false if something unexpected happened.
  */
