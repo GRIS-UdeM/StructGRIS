@@ -37,9 +37,9 @@ juce::String const CartesianVector::XmlTags::Z = "Z";
 //==============================================================================
 CartesianVector::CartesianVector(PolarVector const & polarVector) noexcept
 {
-    // Mathematically, the polar angle for elevation should start from the pole and be equal to 90 degrees at the equator.
-    // We have to accomodate for a slightly different coordinate system where the elevation angle starts at the equator
-    // and is equal to 90 degrees at the north pole (zenith).
+    // Mathematically, the polar angle for elevation should start from the pole and be equal to 90 degrees at the
+    // equator. We have to accomodate for a slightly different coordinate system where the elevation angle starts at the
+    // equator and is equal to 90 degrees at the north pole (zenith).
 
     // This is quite dangerous because any trigonometry done outside of this class might get things wrong.
 
