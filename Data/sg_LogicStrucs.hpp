@@ -381,6 +381,9 @@ struct RecordingOptions {
     RecordingFormat format{ DEFAULT_RECORDING_FORMAT };
     RecordingFileType fileType{ DEFAULT_RECORDING_FILE_TYPE };
     bool shouldSaveSpeakerSetup{};
+    bool shouldRecordAmbisonicFiles{};
+    int ambisonicOrder{};
+    bool recordOnlyAmbisonic{};
     //==============================================================================
     [[nodiscard]] std::unique_ptr<juce::XmlElement> toXml() const;
     [[nodiscard]] static tl::optional<RecordingOptions> fromXml(juce::XmlElement const & xml);
