@@ -21,5 +21,5 @@
 
 namespace gris
 {
-enum class PlayerMode : int { audio = 1, ambisonic };
+enum class PlayerMode : int { none = 0, audio, ambisonic };
 } // namespace gris

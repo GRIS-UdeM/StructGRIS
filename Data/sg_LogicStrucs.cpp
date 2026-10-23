@@ -1232,16 +1232,19 @@ std::unique_ptr<AudioConfig> SpatGrisData::toAudioConfig() const
         result->sourcesAudioConfig.add(source.key, source.value->toConfig(isAtLeastOneSourceSolo));
     }
     result->spatMode = project.spatMode;
+    result->playerMode = appData.playerMode;
     result->spatGainsInterpolation = project.spatGainsInterpolation;
 
     if (appData.stereoMode) {
         result->isStereo = appData.stereoMode.has_value();
 
-        // direct outs are ignored in stereo mode
-        result->directOutPairs.clearQuick();
+        // direct outs are ignored in stereo mode, but Ambisonic Player needs them
+        if (!(appData.playerExists && appData.playerMode == PlayerMode::ambisonic)) {
+            result->directOutPairs.clearQuick();
 
-        for (auto & source : result->sourcesAudioConfig) {
-            source.value.directOut.reset();
+            for (auto & source : result->sourcesAudioConfig) {
+                source.value.directOut.reset();
+            }
         }
     }
 

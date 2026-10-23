@@ -483,6 +483,7 @@ struct AppData {
     StereoRouting stereoRouting{};
     BinauralSettings binauralSettings{};
     bool playerExists{};
+    PlayerMode playerMode{ PlayerMode::audio };
     int windowX{ 100 };
     int windowY{ 100 };
     int windowWidth{ 1200 };

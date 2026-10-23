@@ -22,6 +22,7 @@
 #include "StrongTypes/sg_Radians.hpp"
 #include "Data/StrongTypes/sg_OutputPatch.hpp"
 #include "Data/StrongTypes/sg_SourceIndex.hpp"
+#include "sg_PlayerMode.hpp"
 #include "sg_SpatMode.hpp"
 #include "sg_constants.hpp"
 #include "juce_core/juce_core.h"
@@ -131,6 +132,7 @@ using SpeakersAudioConfig = StaticMap<output_patch_t, SpeakerAudioConfig, MAX_NU
  */
 struct AudioConfig {
     SpatMode spatMode{};
+    PlayerMode playerMode{};
     bool isStereo{};
     bool isStereoMuted{};
     float masterGain{};
