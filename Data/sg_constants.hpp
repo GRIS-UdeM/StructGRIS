@@ -89,6 +89,9 @@ constexpr auto SPAT_MODE_BUTTONS_RADIO_GROUP_ID = 1;
 constexpr auto PREPARE_TO_RECORD_WINDOW_FILE_FORMAT_GROUP_ID = 2;
 constexpr auto PREPARE_TO_RECORD_WINDOW_FILE_TYPE_GROUP_ID = 3;
 
+constexpr auto SAF_MAX_NUM_CHANNELS = 128;
+constexpr int SAF_MAX_RECONFIGURATION_ATTEMPTS = 5;
+
 constexpr juce::Range<source_index_t> LEGAL_SOURCE_INDEX_RANGE{ source_index_t{ 1 },
                                                                 source_index_t{ MAX_NUM_SOURCES + 1 } };
 constexpr juce::Range<output_patch_t> LEGAL_OUTPUT_PATCH_RANGE{ output_patch_t{ 1 },
