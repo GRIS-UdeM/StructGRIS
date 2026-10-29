@@ -483,7 +483,8 @@ struct AppData {
     StereoRouting stereoRouting{};
     BinauralSettings binauralSettings{};
     bool playerExists{};
-    PlayerMode playerMode{ PlayerMode::audio };
+    PlayerMode playerMode{ PlayerMode::none };
+    std::vector<source_index_t> playerAmbisonicDirectOutSources{};
     int windowX{ 100 };
     int windowY{ 100 };
     int windowWidth{ 1200 };
